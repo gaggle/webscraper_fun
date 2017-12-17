@@ -5,7 +5,9 @@ import lxml.html
 from requests import get
 
 
-def recursively_find_words(url, words, limit=3, visited=[]):
+def recursively_find_words(url, words, limit=3, visited=None):
+    if visited is None:
+        visited = []
     word_occurrences = {}
     print("Visiting", url, "limit:", limit)
     html = _get_page_content(url)
