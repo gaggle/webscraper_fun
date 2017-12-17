@@ -20,5 +20,5 @@ flask run
 
 Use it:
 
-Make request to `http://127.0.0.1:5000/ExtractInfoFromWebsite?url=http://example.com&words=example,foo&limit=0`
+Make request to `http://127.0.0.1:5000/ExtractInfoFromWebsite?URL=http://example.com&match_words=example,foo&recursion_depth=0`
 ```
