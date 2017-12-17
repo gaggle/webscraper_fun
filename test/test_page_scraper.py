@@ -48,6 +48,6 @@ def test_find_links_against_google():
 
 
 def _get_fixture(name):
-    fixture_path = path.abspath(path.join('fixtures', name))
+    fixture_path = path.abspath(path.join(path.dirname(__file__), 'fixtures', name))
     with open(fixture_path) as f:
         return f.read()
