@@ -2,11 +2,15 @@ from typing import Iterable, Iterator
 
 import lxml.html
 from requests import get
+from requests.exceptions import InvalidSchema, MissingSchema
 
 
 def recursively_find_words(url, words, limit=3):
+    print("Visiting", url, "limit:", limit)
     word_occurrences = {}
     content = _get_page_content(url)
+    if not content:
+        return word_occurrences
 
     for word, count in _find_occurrences_of_words(content, words):
         if word not in word_occurrences:
@@ -21,8 +25,11 @@ def recursively_find_words(url, words, limit=3):
 
 
 def _get_page_content(url):
-    res = get(url)
-    content = res.text
+    try:
+        res = get(url)
+        content = res.text
+    except (InvalidSchema, MissingSchema):
+        content = ''
     return content
 
 
