@@ -12,10 +12,17 @@ Test:
 PYTHONPATH=. pytest test
 ```
 
-To start:
+To start dev:
 ```
 export FLASK_APP=webscraper/app.py
 flask run
+```
+
+To start "production":
+```
+cd webscraper
+PYTHONPATH=. gunicorn --bind 0.0.0.0:8000 wsgi:app --workers 10
+
 ```
 
 Use it:
