@@ -1,14 +1,15 @@
 from typing import Iterable, Iterator
+from urllib.parse import urljoin
 
 import lxml.html
 from requests import get
-from requests.exceptions import InvalidSchema, MissingSchema
 
 
-def recursively_find_words(url, words, limit=3):
-    print("Visiting", url, "limit:", limit)
+def recursively_find_words(url, words, limit=3, visited=[]):
     word_occurrences = {}
+    print("Visiting", url, "limit:", limit)
     content = _get_page_content(url)
+    visited.append(url)
     if not content:
         return word_occurrences
 
@@ -18,17 +19,31 @@ def recursively_find_words(url, words, limit=3):
         word_occurrences[word] += count
 
     if limit > 0:
-        for sub_url in _find_links(content):
-            word_occurrences.update(
-                recursively_find_words(sub_url, words, limit - 1))
+        for sub_url in _find_links(url, content):
+            if sub_url in visited:
+                continue
+            sub_page_words = recursively_find_words(sub_url, words, limit - 1)
+            word_occurrences = _combine_word_occurrences(word_occurrences,
+                                                         sub_page_words)
     return word_occurrences
+
+
+def _combine_word_occurrences(a: dict, b: dict) -> dict:
+    result = a.copy()
+    for k, v in b.items():
+        if k not in result:
+            result[k] = v
+        else:
+            result[k] += v
+    return result
 
 
 def _get_page_content(url):
     try:
         res = get(url)
         content = res.text
-    except (InvalidSchema, MissingSchema):
+    except Exception as ex:
+        print("Giving up getting URL '{}': {}".format(url, ex))
         content = ''
     return content
 
@@ -38,7 +53,7 @@ def _find_occurrences_of_words(content: str, words: Iterable) -> Iterator:
     return zip(words, occurrences)
 
 
-def _find_links(content: str) -> Iterator:
+def _find_links(root:str, content: str) -> Iterator:
     dom = lxml.html.fromstring(content)
     for link in dom.xpath('//a/@href'):
-        yield link
+        yield urljoin(root, link)

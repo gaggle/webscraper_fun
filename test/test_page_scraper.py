@@ -21,11 +21,20 @@ def test_recursively_find_words_on_2nd_page():
     result = recursively_find_words('n/a', ['foo'])
     assert result == {'foo': 1}
 
+
 @patch('webscraper.lib.page_scraper._get_page_content',
        Mock(side_effect=['<a href="url">link text</a>', 'foo']))
 def test_recursively_respects_recurse_limit():
     result = recursively_find_words('n/a', ['foo'], limit=0)
     assert result == {'foo': 0}
+
+
+@patch('webscraper.lib.page_scraper._get_page_content',
+       Mock(side_effect=['<a href="url2">link text</a>foo',
+                         '<a href="url">link text</a>foo']))
+def test_recursively_only_visits_page_once():
+    result = recursively_find_words('url', ['foo'])
+    assert result == {'foo': 2}
 
 
 def test_get_page_content():
@@ -48,6 +57,7 @@ def test_find_links_against_google():
 
 
 def _get_fixture(name):
-    fixture_path = path.abspath(path.join(path.dirname(__file__), 'fixtures', name))
+    fixture_path = path.abspath(
+        path.join(path.dirname(__file__), 'fixtures', name))
     with open(fixture_path) as f:
         return f.read()
