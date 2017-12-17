@@ -48,7 +48,12 @@ def test_find_occurrences_of_words_in_simple_text():
 
 def test_find_occurrences_of_words_against_google():
     result = _find_occurrences_of_words(_get_fixture('google.com'), ['Lucky'])
-    assert list(result) == [('Lucky', 2)]
+    assert list(result) == [('Lucky', 1)]
+
+
+def test_find_occurrences_of_words_against_example():
+    result = _find_occurrences_of_words(_get_fixture('iana.org'), ['foo'])
+    assert list(result) == [('foo', 0)]
 
 
 def test_find_links_against_google():
