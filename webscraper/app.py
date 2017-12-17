@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 from werkzeug.exceptions import BadRequest
 
 from webscraper.lib.page_scraper import recursively_find_words
@@ -18,4 +18,5 @@ def extract_info_from_website():
 
     print("Endpoint params:", url, words, limit)
     data = recursively_find_words(url, words, limit)
+    print("Endpoint result", data)
     return jsonify(data)
