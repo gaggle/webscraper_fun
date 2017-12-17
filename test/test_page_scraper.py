@@ -1,8 +1,31 @@
 from os import path
 
-from webscraber.lib.page_scraper import (
+from mock import Mock, patch
+
+from webscraper.lib.page_scraper import (
     _find_links, _find_occurrences_of_words, _get_page_content,
+    recursively_find_words,
 )
+
+
+@patch('webscraper.lib.page_scraper._get_page_content',
+       Mock(side_effect=['foo bar baz']))
+def test_recursively_find_words_on_one_page():
+    result = recursively_find_words('n/a', ['foo'])
+    assert result == {'foo': 1}
+
+
+@patch('webscraper.lib.page_scraper._get_page_content',
+       Mock(side_effect=['<a href="url">link text</a>', 'foo']))
+def test_recursively_find_words_on_2nd_page():
+    result = recursively_find_words('n/a', ['foo'])
+    assert result == {'foo': 1}
+
+@patch('webscraper.lib.page_scraper._get_page_content',
+       Mock(side_effect=['<a href="url">link text</a>', 'foo']))
+def test_recursively_respects_recurse_limit():
+    result = recursively_find_words('n/a', ['foo'], limit=0)
+    assert result == {'foo': 0}
 
 
 def test_get_page_content():
