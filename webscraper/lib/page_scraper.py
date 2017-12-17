@@ -8,19 +8,19 @@ from requests import get
 def recursively_find_words(url, words, limit=3, visited=[]):
     word_occurrences = {}
     print("Visiting", url, "limit:", limit)
-    content = _get_page_content(url)
+    html = _get_page_content(url)
     visited.append(url)
-    if not content:
+    if not html:
         return word_occurrences
 
-    for word, count in _find_occurrences_of_words(content, words):
+    for word, count in _find_occurrences_of_words(html, words):
         if word not in word_occurrences:
             word_occurrences[word] = 0
         print("Found {} {} times on {}".format(word, count, url))
         word_occurrences[word] += count
 
     if limit > 0:
-        for sub_url in _find_links(url, content):
+        for sub_url in _find_links(url, html):
             if sub_url in visited:
                 continue
             sub_page_words = recursively_find_words(sub_url, words, limit - 1)
@@ -56,7 +56,7 @@ def _find_occurrences_of_words(html: str, words: Iterable) -> Iterator:
     return zip(words, occurrences)
 
 
-def _find_links(root:str, content: str) -> Iterator:
+def _find_links(root: str, content: str) -> Iterator:
     dom = lxml.html.fromstring(content)
     for link in dom.xpath('//a/@href'):
         yield urljoin(root, link)
