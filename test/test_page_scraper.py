@@ -93,7 +93,7 @@ def test_find_links():
 
 def test_find_links_against_google():
     result = _find_links('google.com', _get_fixture('google.com'))
-    assert 24 == len(list(result))
+    assert 20 == len(list(result))
 
 
 def _get_fixture(name):

@@ -57,5 +57,5 @@ def _find_occurrences_of_words(dom: lxml.html.HtmlElement,
 
 
 def _find_links(root: str, dom: lxml.html.HtmlElement) -> Iterator:
-    for element, attribute, link, pos in dom.iterlinks():
+    for link in dom.xpath('//a/@href'):
         yield urljoin(root, link)
