@@ -49,7 +49,9 @@ def _get_page_content(url):
     return content
 
 
-def _find_occurrences_of_words(content: str, words: Iterable) -> Iterator:
+def _find_occurrences_of_words(html: str, words: Iterable) -> Iterator:
+    dom = lxml.html.fromstring(html)
+    content = dom.text_content()
     occurrences = [content.count(word) for word in words]
     return zip(words, occurrences)
 
