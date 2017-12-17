@@ -16,6 +16,7 @@ def recursively_find_words(url, words, limit=3, visited=[]):
     for word, count in _find_occurrences_of_words(content, words):
         if word not in word_occurrences:
             word_occurrences[word] = 0
+        print("Found {} {} times on {}".format(word, count, url))
         word_occurrences[word] += count
 
     if limit > 0:
