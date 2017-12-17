@@ -1,7 +1,7 @@
 from os import path
 
 from webscraber.lib.page_scraper import (
-    _find_occurrences_of_words, _get_page_content,
+    _find_links, _find_occurrences_of_words, _get_page_content,
 )
 
 
@@ -17,6 +17,11 @@ def test_find_occurrences_of_words_in_simple_text():
 def test_find_occurrences_of_words_against_google():
     result = _find_occurrences_of_words(_get_fixture('google.com'), ['Lucky'])
     assert list(result) == [('Lucky', 2)]
+
+
+def test_find_links_against_google():
+    result = _find_links(_get_fixture('google.com'))
+    assert len(list(result)) == 20
 
 
 def _get_fixture(name):
