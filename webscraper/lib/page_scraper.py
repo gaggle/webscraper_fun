@@ -9,7 +9,7 @@ def recursively_find_words(url, words, limit=3):
     content = _get_page_content(url)
 
     word_occurrences.update(_find_occurrences_of_words(content, words))
-    for link in _find_links():
+    for link in _find_links(content):
         recursively_find_words(link, words, limit - 1)
     return {}
 
