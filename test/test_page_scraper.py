@@ -52,7 +52,7 @@ def test_find_occurrences_of_words_against_google():
 
 
 def test_find_links_against_google():
-    result = _find_links(_get_fixture('google.com'))
+    result = _find_links('google.com', _get_fixture('google.com'))
     assert len(list(result)) == 20
 
 
